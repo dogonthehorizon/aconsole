@@ -14,7 +14,8 @@ data AccountId = AccountId String
 instance Show AccountId where
     show (AccountId a) = a
 
--- Constructor for a valid account id that is nine digits long
+-- Constructor for a valid account id that is twelve digits long
+-- http://docs.aws.amazon.com/general/latest/gr/acct-identifiers.html
 accountId :: String -> AccountId
 accountId a | length a == 12 && all isDigit a = AccountId a
             | otherwise = error "Invalid account id. Must be a string of 9 digits."
