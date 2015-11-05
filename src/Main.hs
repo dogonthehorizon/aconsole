@@ -3,10 +3,24 @@
 -- MIT license (see https://opensource.org/licenses/MIT)
 --
 
-{-# LANGUAGE OverloadedStrings #-}
-
 import System.Console.ArgParser
 import Text.Format
+import Data.Char
+
+-- TODO: Hide this type behind a module so that accountId is the only
+--       exposed constructor
+data AccountId = AccountId String
+
+instance Show AccountId where
+    show (AccountId a) = a
+
+-- Constructor for a valid account id that is nine digits long
+accountId :: String -> AccountId
+accountId a | length a == 12 && all isDigit a = AccountId a
+            | otherwise = error "Invalid account id. Must be a string of 9 digits."
+
+type AWSRole = String
+type ARN = String
 
 -- Custom datatype describing the expected type and number of arguments
 data AConsoleArgs =
@@ -21,10 +35,14 @@ aConsoleArgsParser = AConsoleArgs
     `andBy`    optPos "default" "browser" `Descr` "desired browser to open the AWS console in"
 
 -- Given an accountId and awsRole, return a properly formatted ARN
-generateARN :: String -> String -> String
+generateARN :: AccountId -> AWSRole -> ARN
 generateARN accountId awsRole =
-    format "arn:aws:iam::{0}:role/{1}" [accountId, awsRole]
+    format "arn:aws:iam::{0}:role/{1}" [show accountId, awsRole]
+
+printARN :: AConsoleArgs -> IO ()
+printARN (AConsoleArgs acct role _) =
+    print $ generateARN (accountId acct) role
 
 main = do
     interface <- mkApp aConsoleArgsParser
-    runApp interface print
+    runApp interface printARN
