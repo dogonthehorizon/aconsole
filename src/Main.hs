@@ -4,8 +4,8 @@
 --
 
 import System.Console.ArgParser
-import Text.Format
-import Data.Char
+import Text.Format (format)
+import Data.Char (isDigit)
 
 -- TODO: Hide this type behind a module so that accountId is the only
 --       exposed constructor
@@ -36,13 +36,13 @@ aConsoleArgsParser = AConsoleArgs
     `andBy`    optPos "default" "browser" `Descr` "desired browser to open the AWS console in"
 
 -- Given an accountId and awsRole, return a properly formatted ARN
-generateARN :: AccountId -> AWSRole -> ARN
-generateARN accountId awsRole =
+generateIdentityARN :: AccountId -> AWSRole -> ARN
+generateIdentityARN accountId awsRole =
     format "arn:aws:iam::{0}:role/{1}" [show accountId, awsRole]
 
 printARN :: AConsoleArgs -> IO ()
 printARN (AConsoleArgs acct role _) =
-    print $ generateARN (accountId acct) role
+    print $ generateIdentityARN (accountId acct) role
 
 main = do
     interface <- mkApp aConsoleArgsParser
