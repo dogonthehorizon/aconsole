@@ -12,7 +12,8 @@ module AConsole.Types
       ARN
     ) where
 
-import Data.Char
+import Data.Char (isDigit)
+import AConsole.Predicates
 
 -- | Describes a valid account id according to AWS.
 data AccountId = AccountId String
@@ -35,20 +36,6 @@ data AWSRole = AWSRole String
 -- a string.
 instance Show AWSRole where
     show (AWSRole a) = a
-
--- | Predicate returning True if the given character is allowed in AWS
--- role names.
---
--- TODO: Its possible that some unwanted chars can be validated against
---       these categories. Write some tests to ensure this doesn't happen.
-isRoleChar c = case generalCategory c of
-    UppercaseLetter         -> True  -- A-Z
-    LowercaseLetter         -> True  -- a-z
-    DashPunctuation         -> True  -- -
-    ConnectorPunctuation    -> True  -- _
-    OtherPunctuation        -> True  -- @, ., ,
-    MathSymbol              -> True  -- +, =
-    _                       -> False -- Reject everything else
 
 -- | Constructor for a valid AWS role given the following constraints.
 -- http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html
