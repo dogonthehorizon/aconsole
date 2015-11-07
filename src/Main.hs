@@ -21,12 +21,12 @@ aConsoleArgsParser = AConsoleArgs
 -- | Generate a properly formatted IAM ARN given an account id and role.
 generateIdentityARN :: AccountId -> AWSRole -> ARN
 generateIdentityARN accountId awsRole =
-    format "arn:aws:iam::{0}:role/{1}" [show accountId, awsRole]
+    format "arn:aws:iam::{0}:role/{1}" [show accountId, show awsRole]
 
 -- | Prints a properly formatted IAM ARN
 printARN :: AConsoleArgs -> IO ()
 printARN (AConsoleArgs acct role _) =
-    print $ generateIdentityARN (accountId acct) role
+    print $ generateIdentityARN (accountId acct) (awsRole role)
 
 main = do
     interface <- mkApp aConsoleArgsParser
