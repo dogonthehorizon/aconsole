@@ -15,9 +15,6 @@ module AConsole.Types
 import Data.Char (isDigit, isAlphaNum)
 
 -- | Describes a valid account id according to AWS.
---
--- TODO: Hide this type behind a module so that accountId is the only
---       exposed constructor
 data AccountId = AccountId String
 
 -- | An AccountId is just a string with constraints, lets show it like
